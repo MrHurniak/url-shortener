@@ -1,0 +1,18 @@
+micronaut:
+  application:
+    name: urlShortenerServer
+
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /swagger-ui/**
+
+jackson:
+  property-naming-strategy: SNAKE_CASE
+
+url:
+  proposal-count: 5
