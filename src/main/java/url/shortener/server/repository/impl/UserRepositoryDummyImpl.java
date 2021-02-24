@@ -25,7 +25,7 @@ public class UserRepositoryDummyImpl implements UserRepository {
         .map(
             value -> new User()
                 .setEmail(id)
-                .setEmail(value)
+                .setPassword(value)
         );
   }
 

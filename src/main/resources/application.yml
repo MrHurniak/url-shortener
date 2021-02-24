@@ -11,6 +11,20 @@ micronaut:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
 
+  security:
+    enabled: true
+    endpoints:
+      login:
+        enabled: false
+      logout:
+        path: /users/signout
+        enabled: true
+    intercept-url-map:
+      - pattern: /swagger/*
+        access:
+          - isAnonymous()
+          - isAuthenticated()
+
 jackson:
   property-naming-strategy: SNAKE_CASE
 

@@ -10,7 +10,11 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import java.net.URI;
+import java.security.Principal;
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,30 +30,36 @@ public class UrlController {
   private final UrlComponent urlComponent;
   private final UrlService urlService;
 
+  @Secured(SecurityRule.IS_AUTHENTICATED)
   @Post(value = "urls/shorten", consumes = APPLICATION_JSON)
   public HttpResponse<Void> createUrlAlias(
+      Principal principal,
       @Valid @Body UrlCreateDto urlCreateDto
   ) {
-    String alias = urlService.createUrl("test_user", urlCreateDto);
+    String alias = urlService.createUrl(principal.getName(), urlCreateDto);
 
     return HttpResponse.created(
         urlComponent.createLocationUri(alias)
     );
   }
 
+  @Secured(SecurityRule.IS_AUTHENTICATED)
   @Get(value = "urls", produces = APPLICATION_JSON)
-  public UrlsListDto getAllUserUrls() {
-    return urlService.getUserUrls("test_user");
+  public UrlsListDto getAllUserUrls(Principal principal) {
+    return urlService.getUserUrls(principal.getName());
   }
 
+  @Secured(SecurityRule.IS_AUTHENTICATED)
   @Delete("urls/{alias}")
   public HttpResponse<Void> deleteUrl(
+      Principal principal,
       @PathVariable("alias") String alias
   ) {
-    urlService.deleteUserUrl("test_user", alias);
+    urlService.deleteUserUrl(principal.getName(), alias);
     return HttpResponse.status(HttpStatus.NO_CONTENT);
   }
 
+  @PermitAll
   @Get("r/{alias}")
   public HttpResponse<Void> redirect(
       @PathVariable("alias") String alias

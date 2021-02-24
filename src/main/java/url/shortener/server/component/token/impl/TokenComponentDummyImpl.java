@@ -3,12 +3,15 @@ package url.shortener.server.component.token.impl;
 import io.micronaut.context.annotation.Requires;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotBlank;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import url.shortener.server.component.token.TokenComponent;
 
+@Slf4j
 @Singleton
 @Requires(property = "token.dummy.enabled", value = "true", defaultValue = "true")
 public class TokenComponentDummyImpl implements TokenComponent {
@@ -28,9 +31,11 @@ public class TokenComponentDummyImpl implements TokenComponent {
   }
 
   @Override
-  public void checkValid(String token) {
+  public Optional<String> validateToken(String token) {
     if (StringUtils.isBlank(token) || !database.containsKey(token)) {
-      throw new RuntimeException("Unauthorized 401");
+      log.error("User with token '{}' is not authorized", token);
+      return Optional.empty();
     }
+    return Optional.ofNullable(database.get(token));
   }
 }

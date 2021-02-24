@@ -1,5 +1,6 @@
 package url.shortener.server.repository.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -15,7 +16,7 @@ public class UrlRepositoryDummyImpl implements UrlRepository {
 
   @Override
   public List<ShortenedUrl> findAll(Set<String> aliases) {
-    return null;
+    return Collections.emptyList();
   }
 
   @Override

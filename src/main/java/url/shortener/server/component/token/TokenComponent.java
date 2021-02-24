@@ -1,5 +1,6 @@
 package url.shortener.server.component.token;
 
+import java.util.Optional;
 import javax.validation.constraints.NotBlank;
 
 public interface TokenComponent {
@@ -8,5 +9,5 @@ public interface TokenComponent {
 
   void removeToken(@NotBlank String token);
 
-  void checkValid(String token);
+  Optional<String> validateToken(String token);
 }
