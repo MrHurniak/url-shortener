@@ -24,6 +24,10 @@ micronaut:
         access:
           - isAnonymous()
           - isAuthenticated()
+      - pattern: /swagger-ui/*
+        access:
+          - isAnonymous()
+          - isAuthenticated()
 
 jackson:
   property-naming-strategy: SNAKE_CASE
