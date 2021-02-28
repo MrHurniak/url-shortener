@@ -1,12 +1,16 @@
-## Micronaut 2.3.2 Documentation
+# URL shorten service
 
-- [User Guide](https://docs.micronaut.io/2.3.2/guide/index.html)
-- [API Reference](https://docs.micronaut.io/2.3.2/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/2.3.2/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+## How to run
 
-## Feature http-client documentation
+1. Build application
+    ```shell
+    mvn clean install
+    ```
+1. Run application
+    ```shell
+   mvn mn:run
+    ```
+## Documentation
 
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
-
+* [Swagger link](http://localhost:8080/swagger/shorten-url-service.yml)
+* [Swagger UI](http://localhost:8080/swagger-ui/index.html)
