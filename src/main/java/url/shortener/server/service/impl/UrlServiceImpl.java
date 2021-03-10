@@ -2,9 +2,9 @@ package url.shortener.server.service.impl;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
@@ -106,10 +106,7 @@ public class UrlServiceImpl implements UrlService {
 
   @Override
   public UrlsListDto getUserUrls(String userId) {
-    Set<String> aliases = userUrlRepository.findAll(userId)
-        .stream()
-        .map(UserUrl::getAlias)
-        .collect(Collectors.toSet());
+    Set<String> aliases = new HashSet<>(userUrlRepository.findAll(userId));
 
     return userUrlMapper.toListDto(
         urlRepository.findAll(aliases)
