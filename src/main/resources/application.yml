@@ -40,3 +40,7 @@ encryption:
   key-length: 128
   salt: changeMe
   hashing.dummy.enabled: true
+
+synonyms:
+  api:
+    host: https://api.datamuse.com/words
