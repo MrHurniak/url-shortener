@@ -44,3 +44,11 @@ encryption:
 synonyms:
   api:
     host: https://api.datamuse.com/words
+
+cache:
+  url:
+    duration: PT10M
+    max-size: 1000
+  token:
+    duration: PT20M
+    max-size: 250
