@@ -1,5 +1,6 @@
 package url.shortener.server.service.impl;
 
+import io.micronaut.http.HttpStatus;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,7 +10,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import url.shortener.server.component.synonym.SynonymsSearchComponent;
+import url.shortener.server.config.exception.BusinessException;
 import url.shortener.server.config.exception.NotUniqueAliasException;
+import url.shortener.server.config.properties.RepositoryProperties;
 import url.shortener.server.config.properties.UrlProperties;
 import url.shortener.server.dto.UrlCreateDto;
 import url.shortener.server.dto.UrlsListDto;
@@ -28,6 +31,7 @@ public class UrlServiceImpl implements UrlService {
   private final SynonymsSearchComponent synonymsComponent;
   private final UserUrlMapper userUrlMapper;
   private final int proposalCount;
+  private final int maxKeyLength;
 
   @Inject
   public UrlServiceImpl(
@@ -35,13 +39,15 @@ public class UrlServiceImpl implements UrlService {
       UserUrlRepository userUrlRepository,
       SynonymsSearchComponent synonymsComponent,
       UserUrlMapper userUrlMapper,
-      UrlProperties urlProperties
+      UrlProperties urlProperties,
+      RepositoryProperties repositoryProperties
   ) {
     this.urlRepository = urlRepository;
     this.userUrlRepository = userUrlRepository;
     this.synonymsComponent = synonymsComponent;
     this.userUrlMapper = userUrlMapper;
     this.proposalCount = urlProperties.getProposalCount();
+    this.maxKeyLength = repositoryProperties.getUrl().getKeyLength();
   }
 
   @Override
@@ -93,6 +99,7 @@ public class UrlServiceImpl implements UrlService {
     if (synonymsComponent.isSearchable(alias)) {
       synonymsComponent.retrieveSynonyms(alias, proposalCount)
           .stream()
+          .filter(synonym -> synonym.length() <= maxKeyLength)
           .filter(synonym -> !urlRepository.existsById(synonym))
           .forEach(synonyms::add);
     }
@@ -127,6 +134,6 @@ public class UrlServiceImpl implements UrlService {
   public URI getOriginalUrl(String alias) {
     return urlRepository.findById(alias)
         .map(ShortenedUrl::getOriginalUrl)
-        .orElseThrow(() -> new RuntimeException("Not found"));
+        .orElseThrow(() -> new BusinessException("Url is not found", HttpStatus.NOT_FOUND));
   }
 }

@@ -1,7 +1,6 @@
 package url.shortener.server.repository.impl;
 
 import java.util.List;
-import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -22,22 +21,16 @@ public class UserUrlRepositoryImpl implements UserUrlRepository {
 
   @Override
   public List<String> findAll(@NotNull String userId) {
-    Objects.requireNonNull(userId);
-
     return userUrlTable.findByKey(userId);
   }
 
   @Override
   public boolean save(@NotNull UserUrl userUrl) {
-    Objects.requireNonNull(userUrl);
-
     return userUrlTable.put(userUrl.getUserId(), userUrl.getAlias());
   }
 
   @Override
   public void delete(@NotNull UserUrl userUrl) {
-    Objects.requireNonNull(userUrl);
-
     userUrlTable.deleteByKey(userUrl.getUserId(), userUrl.getAlias());
   }
 }

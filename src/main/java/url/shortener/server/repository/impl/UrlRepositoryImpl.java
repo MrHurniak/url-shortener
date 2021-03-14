@@ -3,6 +3,7 @@ package url.shortener.server.repository.impl;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import url.shortener.server.bigtable.BigTable;
 import url.shortener.server.config.properties.CacheProperties;
 import url.shortener.server.config.properties.CacheProperties.CacheParams;
+import url.shortener.server.config.properties.RepositoryProperties;
 import url.shortener.server.entity.ShortenedUrl;
 import url.shortener.server.repository.UrlRepository;
 
@@ -34,10 +36,11 @@ public class UrlRepositoryImpl implements UrlRepository {
 
   public UrlRepositoryImpl(
       @Named("urlTable") BigTable urlTable,
-      CacheProperties cacheProperties
+      CacheProperties cacheProperties,
+      RepositoryProperties repositoryProperties
   ) {
     this.urlTable = urlTable;
-    this.maxKeyLength = 10;
+    this.maxKeyLength = repositoryProperties.getUrl().getKeyLength();
     this.cache = initCache(urlTable, cacheProperties.getUrl());
   }
 
@@ -78,7 +81,7 @@ public class UrlRepositoryImpl implements UrlRepository {
   public Optional<ShortenedUrl> findById(@NotNull String alias) {
     try {
       return Optional.of(toUrl(alias, cache.get(alias)));
-    } catch (ExecutionException e) {
+    } catch (ExecutionException | UncheckedExecutionException e) {
       return Optional.empty();
     }
   }

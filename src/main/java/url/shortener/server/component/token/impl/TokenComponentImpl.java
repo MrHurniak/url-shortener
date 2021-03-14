@@ -3,6 +3,7 @@ package url.shortener.server.component.token.impl;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -65,7 +66,7 @@ public class TokenComponentImpl implements TokenComponent {
     }
     try {
       return Optional.of(tokenCache.get(token));
-    } catch (ExecutionException e) {
+    } catch (ExecutionException | UncheckedExecutionException e) {
       return Optional.empty();
     }
   }

@@ -32,21 +32,16 @@ public class UserRepositoryImpl implements UserRepository {
 
   @Override
   public boolean existsById(@NotNull String id) {
-    Objects.requireNonNull(id);
-
     return userTable.containsKey(id);
   }
 
   @Override
   public void deleteById(@NotNull String id) {
-
     userTable.deleteByKey(id);
   }
 
   @Override
   public boolean save(@NotNull User user) {
-    Objects.requireNonNull(user);
-
     return userTable.put(user.getEmail(), user.getPassword());
   }
 }
